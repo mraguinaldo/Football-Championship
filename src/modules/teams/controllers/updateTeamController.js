@@ -8,6 +8,10 @@ class UpdateTeamController {
       const { teamId } = req.params;
       const { body: teamData } = req;
 
+      if (req.file) {
+        teamData.flag = req.file.filename;
+      }
+
       const theTeamHasBeenUpdated = await updateTeamUseCase.execute({ teamId, teamData });
 
       if (typeof theTeamHasBeenUpdated === "object") {

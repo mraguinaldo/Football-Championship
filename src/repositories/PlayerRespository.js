@@ -2,10 +2,23 @@ const Query = require("../database/index.js")
 
 class PlayerRepository {
   async create(data) {
-    const { name, shirt_number, position, age, weight, team_id } = data
+    const {
+      name,
+      shirt_number,
+      position,
+      age,
+      weight,
+      team_id
+    } = data
 
     const query = `
-      INSERT INTO Players(name, shirt_number, position, age, weight, team_id ) VALUES(?, ?, ?, ?, ?, ?)
+      INSERT INTO Players(
+        name, 
+        shirt_number, 
+        position, 
+        age, 
+        weight, 
+        team_id ) VALUES(?, ?, ?, ?, ?, ?)
     `
     const response = await Query(
       query,
@@ -22,13 +35,36 @@ class PlayerRepository {
   }
   async update({ playerId, player }) {
     const query = `
-      UPDATE Players 
-      SET name = ?, shirt_number = ?, position = ?, age = ?, head_goals = ?, penalty_goals = ?, goals_with_feet = ?, weight = ?, team_id = ? 
+      UPDATE Players SET 
+        name = ?, 
+        shirt_number = ?, 
+        position = ?, 
+        age = ?, 
+        weight = ?, 
+        team_id = ? 
       WHERE id = ?
     `
-    const { name, shirt_number, position, age, head_goals, penalty_goals, goals_with_feet, weight, team_id } = player
+    const {
+      name,
+      shirt_number,
+      position,
+      age,
+      weight,
+      team_id
+    } = player
 
-    const response = await Query(query, [name, shirt_number, position, age, head_goals, penalty_goals, goals_with_feet, weight, team_id, playerId])
+    const response = await Query(
+      query,
+      [
+        name,
+        shirt_number,
+        position,
+        age,
+        weight,
+        team_id,
+        playerId
+      ]
+    )
 
     if (response) {
       const playerUpdated = await this.findById(playerId)
@@ -43,10 +79,17 @@ class PlayerRepository {
     return response
   }
 
-  async findByName(teamName) {
-    const query = `SELECT * FROM Teams WHERE name = ?`
+  async findByShirtNumber(shirtNumber) {
+    const query = `SELECT * FROM Players WHERE shirt_number = ?`
+    const response = await Query(query, [shirtNumber])
 
-    const response = await Query(query, [teamName])
+    return response
+  }
+
+  async findByName(playerName) {
+    const query = `SELECT * FROM Players WHERE name = ?`
+
+    const response = await Query(query, [playerName])
     return response
   }
   async findStadium(stadium) {
