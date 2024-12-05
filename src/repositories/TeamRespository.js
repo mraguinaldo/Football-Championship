@@ -16,7 +16,14 @@ class TeamRepository {
     return response
   }
   async update({ teamId, teamData }) {
-    const query = `UPDATE Teams SET name = ?, stadium = ?, flag = ?, captain_id = ? WHERE id = ?`
+    const query = `
+      UPDATE Teams SET 
+        name = ?, 
+        stadium = ?, 
+        flag = ?, 
+        captain_id = ? 
+      WHERE id = ?
+    `
     const { name, stadium, flag, captainId } = teamData
     const response = await Query(query, [name, stadium, flag, captainId, teamId])
 

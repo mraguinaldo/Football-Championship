@@ -7,9 +7,15 @@ const playerRepository = new PlayerRepository()
 class CreatePlayerUseCase {
   async execute(player) {
     const teamFound = await teamRepository.findById(player.team_id)
+    const shirtNumberFound = await playerRepository.findByShirtNumber(player.shirt_number)
 
     if (!teamFound.length) {
       const message = 'Equipa não encontrada'
+      return message
+    }
+
+    if (shirtNumberFound.length > 0) {
+      const message = 'Já existe um jogador com este número'
       return message
     }
 

@@ -1,4 +1,6 @@
 const { Router } = require("express");
+const multer = require("multer");
+
 const CreateTeamController = require("../modules/teams/controllers/createTeamController");
 const UpdateTeamController = require("../modules/teams/controllers/updateTeamController");
 const GetTeamController = require("../modules/teams/controllers/getTeamController");
@@ -11,7 +13,19 @@ const deleteTeamController = new DeleteTeamController()
 
 const TeamRoutes = Router()
 
-TeamRoutes.post('/create', createTeamController.handle)
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/flags");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+TeamRoutes.post('/create', upload.single("flag"), createTeamController.handle)
 TeamRoutes.put('/edit/:teamId', updateTeamController.handle)
 TeamRoutes.get('/', getTeamController.handle)
 TeamRoutes.delete('/:id', deleteTeamController.handle)
