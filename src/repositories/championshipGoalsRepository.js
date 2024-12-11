@@ -76,6 +76,36 @@ class ChampionshipGoalsRepository {
     return response
   }
 
+  async getChasers() {
+    const query = `
+      SELECT 
+      players.id AS id,
+      COUNT(ChampionshipGoals.player_id) AS total_goals
+      FROM ChampionshipGoals
+      JOIN players 
+      ON players.id = ChampionshipGoals.player_id
+      GROUP BY players.id, players.name
+      ORDER BY total_goals DESC;
+    `
+    const response = await Query(query)
+
+    return response
+  }
+
+  async findByPlayerId(playerId) {
+    const query = `SELECT * FROM ChampionshipGoals WHERE player_id = ?`
+    const response = await Query(query, [playerId])
+
+    return response
+  }
+
+  async findByPlayerIdAndChallengeId(playerId, challengeId) {
+    const query = `SELECT * FROM ChampionshipGoals WHERE player_id = ? AND challenge_id = ?`
+    const response = await Query(query, [playerId, challengeId])
+
+    return response
+  }
+
   async findByChallengeId(findByChallengeId) {
     const query = `SELECT * FROM ChampionshipGoals WHERE challenge_id = ?`
     const response = await Query(query, [findByChallengeId])
@@ -99,6 +129,16 @@ class ChampionshipGoalsRepository {
         WHERE player_id = ? AND id = ?
     `
     const response = await Query(query, [playerId, championshipGoalId])
+
+    return response
+  }
+
+  async findByPlayerAndChampionshipGoal(playerId) {
+    const query = `
+      SELECT * FROM ChampionshipGoals 
+        WHERE player_id = ?
+    `
+    const response = await Query(query, [playerId])
 
     return response
   }

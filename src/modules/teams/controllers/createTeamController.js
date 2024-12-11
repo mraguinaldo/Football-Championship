@@ -7,6 +7,10 @@ class CreateTeamController {
     try {
       const { body: teamData } = req;
 
+      if (req.file) {
+        teamData.flag = req.file.filename;
+      }
+
       const requiredFields = ["name", "stadium"];
       const missingFields = requiredFields.filter(field => !teamData[field]);
 

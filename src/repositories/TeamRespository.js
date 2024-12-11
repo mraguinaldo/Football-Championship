@@ -2,10 +2,10 @@ const Query = require("../database/index.js")
 
 class TeamRepository {
   async create(data) {
-    const { name, stadium } = data
+    const { name, stadium, flag } = data
 
-    const query = `INSERT INTO Teams(name, stadium) VALUES(?, ?)`
-    const response = await Query(query, [name, stadium])
+    const query = `INSERT INTO Teams(name, stadium, flag) VALUES(?, ?, ?)`
+    const response = await Query(query, [name, stadium, flag])
 
     return response
   }
@@ -21,11 +21,28 @@ class TeamRepository {
         name = ?, 
         stadium = ?, 
         flag = ?, 
-        captain_id = ? 
+        captain_id = ?, 
+        points = ?
       WHERE id = ?
     `
-    const { name, stadium, flag, captainId } = teamData
-    const response = await Query(query, [name, stadium, flag, captainId, teamId])
+    const { name, stadium, flag, captain_id, points } = teamData
+    const response = await Query(query, [name, stadium, flag, captain_id, Number(points), Number(teamId)])
+
+    if (response) {
+      const teamUpdated = await this.findById(teamId)
+
+      return teamUpdated
+    }
+  }
+
+  async updatePoints({ teamId, points }) {
+    const query = `
+      UPDATE Teams SET 
+        points = points + ?
+      WHERE id = ?
+    `;
+
+    const response = await Query(query, [points, Number(teamId)])
 
     if (response) {
       const teamUpdated = await this.findById(teamId)
@@ -40,14 +57,22 @@ class TeamRepository {
     return response
   }
 
+  async getAll() {
+    const query = `SELECT * FROM Teams ORDER BY points DESC`;
+
+    const response = await Query(query)
+
+    return response
+  }
+
   async findByName(teamName) {
-    const query = `SELECT * FROM Teams WHERE name = ?`
+    const query = `SELECT * FROM Teams WHERE name = ? `
 
     const response = await Query(query, [teamName])
     return response
   }
   async findStadium(stadium) {
-    const query = `SELECT * FROM Teams WHERE stadium = ?`
+    const query = `SELECT * FROM Teams WHERE stadium = ? `
 
     const response = await Query(query, [stadium])
     return response

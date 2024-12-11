@@ -74,9 +74,64 @@ class ChallengeRepository {
       return playerUpdated
     }
   }
+
+  async updateGameStatus({ challengeId, gameStatus }) {
+    const query = `
+      UPDATE Challenges SET 
+        game_status = ? 
+      WHERE id = ?
+    `
+    const response = await Query(
+      query, [gameStatus, challengeId]
+    )
+
+    if (response) {
+      const challenge = await this.findById(challengeId)
+
+      return challenge
+    }
+  }
+
+  async updateGoalsScored({ challengeId, teamType }) {
+    const field = teamType === "visitor" ? "goals_scored_by_visitors" : "goals_scored_by_home";
+
+    const query = `
+      UPDATE Challenges SET 
+        ${field} = ${field} + 1
+      WHERE id = ?
+    `;
+
+    const response = await Query(query, [challengeId]);
+
+    if (response) {
+      return this.findById(challengeId);
+    }
+  }
+
+
   async findById(challengeId) {
     const query = `SELECT * FROM Challenges WHERE id = ?`
     const response = await Query(query, [challengeId])
+
+    return response
+  }
+
+  async findByChallengeStatus(challengeStatus) {
+    if (challengeStatus === '') {
+      const query = `SELECT * FROM Challenges`
+      const response = await Query(query)
+
+      return response
+    }
+    const query = `SELECT * FROM Challenges WHERE game_status = ?`
+    const response = await Query(query, [challengeStatus])
+
+    return response
+  }
+
+  async findByTeamId(teamId) {
+    const query = `SELECT * FROM Challenges WHERE visiting_team = ? OR home_team = ?`
+    const response = await Query(query, [teamId, teamId])
 
     return response
   }
