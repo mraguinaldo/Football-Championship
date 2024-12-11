@@ -19,7 +19,6 @@ class UpdateChampionshipGoalsController {
         }
       }
 
-
       const theChampionshipGoalHasBeenUpdated = await updateChampionshipGoalsUseCase.execute({ playerId, championshipGoalId, championshipGoals, challengeId });
 
       if (typeof theChampionshipGoalHasBeenUpdated === "object") {

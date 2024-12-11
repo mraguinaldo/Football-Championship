@@ -1,17 +1,17 @@
-const GetChampionshipGoalsUseCase = require("../useCases/getChampionshipGoalsUseCase");
 
-const getChampionshipGoalsUseCase = new GetChampionshipGoalsUseCase();
+const GetChasersUseCase = require("../useCases/getChasersUseCase");
 
-class GetChampionshipGoalsController {
+const getChasersUseCase = new GetChasersUseCase();
+
+class GetChasersController {
   async handle(req, res) {
     try {
-      const { playerId } = req.query;
 
-      const hasThePlayerBeenFound = await getChampionshipGoalsUseCase.execute(playerId);
+      const hasThePlayerBeenFound = await getChasersUseCase.execute();
 
       if (typeof hasThePlayerBeenFound === "object") {
         return res.status(200).json({
-          message: "Golos encontrados com sucesso",
+          message: "Goleadores encontrados",
           status: {
             success: true,
           },
@@ -35,4 +35,4 @@ class GetChampionshipGoalsController {
   }
 }
 
-module.exports = GetChampionshipGoalsController;
+module.exports = GetChasersController;

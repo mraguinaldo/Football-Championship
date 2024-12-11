@@ -9,6 +9,7 @@ class CreateChallengePlayerUseCase {
     let playersInserted = []
     let playerNotFound = ''
 
+
     const challengeFound = await challengeRepository.findById(challengeId)
 
     if (!challengeFound.length) {
@@ -18,15 +19,15 @@ class CreateChallengePlayerUseCase {
     }
 
     players.map((player) => {
+      player.challenge_id = Number(challengeId),
+        player.team_type = team_type
       const playerId = player.player_id
-      const playerFound = challengePlayerRepository.findById(playerId)
 
-      player.team_type = team_type
-      player.challenge_id = Number(challengeId)
+      const playerFound = challengePlayerRepository.findByPlayerIdAndChallengeId(playerId, challengeId)
 
       playerFound.then((data) => {
         if (data.length > 0) {
-          const challengePlayerUpdated = challengePlayerRepository.update({ playerId, player })
+          const challengePlayerUpdated = challengePlayerRepository.update({ playerId, player, challengeId })
 
           if (challengePlayerUpdated) {
             playersInserted.push(challengePlayerUpdated)

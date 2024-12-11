@@ -79,9 +79,16 @@ class PlayerRepository {
     return response
   }
 
-  async findByShirtNumber(shirtNumber) {
-    const query = `SELECT * FROM Players WHERE shirt_number = ?`
-    const response = await Query(query, [shirtNumber])
+  async findByTeamId(team_id) {
+    const query = `SELECT * FROM Players WHERE team_id = ?`
+    const response = await Query(query, [team_id])
+
+    return response
+  }
+
+  async findByShirtNumber(shirtNumber, team_id) {
+    const query = `SELECT * FROM Players WHERE shirt_number = ? and team_id = ?`
+    const response = await Query(query, [shirtNumber, team_id])
 
     return response
   }

@@ -24,7 +24,13 @@ class CreateChampionshipGoalsUseCase {
     const response = await championshipGoalsRepository.create(championshipGoals)
 
     if (response) {
-      return championshipGoals
+      const updateGoals = await challengeRepository.updateGoalsScored({ challengeId: challenge_id, teamType: challengeFound[0].home_team === playerFound[0].team_id ? "home" : "visitor" })
+
+      console.log(updateGoals)
+
+      if (updateGoals) {
+        return championshipGoals
+      }
     }
 
     return response

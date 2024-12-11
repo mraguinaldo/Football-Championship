@@ -30,20 +30,20 @@ class ChallengePlayerRepository {
 
     return response
   }
-  async update({ playerId, player }) {
+  async update({ playerId, player, challengeId }) {
     const query = `
       UPDATE ChallengePlayers SET 
         challenge_id = ?, 
         player_id = ?, 
         team_type = ?, 
         it_played = ? 
-      WHERE player_id = ?
+      WHERE player_id = ? AND challenge_id = ?
     `
     const {
       challenge_id,
       player_id,
       team_type,
-      it_played
+      it_played,
     } = player
 
     const response = await Query(
@@ -53,7 +53,8 @@ class ChallengePlayerRepository {
         player_id,
         team_type,
         it_played,
-        playerId
+        playerId,
+        challengeId
       ]
     )
 
@@ -66,6 +67,12 @@ class ChallengePlayerRepository {
   async findById(playerId) {
     const query = `SELECT * FROM ChallengePlayers WHERE player_id = ?`
     const response = await Query(query, [playerId])
+
+    return response
+  }
+  async findByPlayerIdAndChallengeId(playerId, challengeId) {
+    const query = `SELECT * FROM ChallengePlayers WHERE player_id = ? AND challenge_id = ?`
+    const response = await Query(query, [playerId, challengeId])
 
     return response
   }

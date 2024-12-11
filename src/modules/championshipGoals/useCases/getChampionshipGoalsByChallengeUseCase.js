@@ -4,12 +4,12 @@ const PlayerRepository = require("../../../repositories/PlayerRespository")
 const playerRepository = new PlayerRepository()
 const championshipGoalsRepository = new ChampionshipGoalsRepository()
 
-class GetChampionshipGoalsUseCase {
-  async execute(playerId) {
+class GetChampionshipGoalsByChallengeUseCase {
+  async execute(playerId, challengeId) {
     const playerFound = await playerRepository.findById(playerId)
 
     if (playerFound.length > 0) {
-      const goals = championshipGoalsRepository.findByPlayerId(playerId)
+      const goals = championshipGoalsRepository.findByPlayerIdAndChallengeId(playerId, challengeId)
 
       return goals
     }
@@ -22,4 +22,4 @@ class GetChampionshipGoalsUseCase {
 
 
 
-module.exports = GetChampionshipGoalsUseCase
+module.exports = GetChampionshipGoalsByChallengeUseCase
